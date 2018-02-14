@@ -7,12 +7,25 @@ RUN apt-get update
 RUN apt-get -y --force-yes --no-install-recommends install \
   git zip unzip curl vim wget ssh rsync
 
+# Adding PHP extensions.
+RUN apt-get -y --force-yes --no-install-recommends install \
+  libfreetype6-dev libjpeg62-turbo-dev libmcrypt-dev libpng-dev && \
+  docker-php-ext-install -j$(nproc) iconv mcrypt && \
+  docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ &&  \
+  docker-php-ext-install -j$(nproc) gd
+
 # Composer
 RUN curl -ksSL https://getcomposer.org/installer | php && \
   mv composer.phar /usr/local/bin/composer && \
   chmod 777 /usr/local/bin/composer
 
 ENV PATH="$PATH:/root/.composer/vendor/bin"
+
+# Drupal Console
+RUN curl https://drupalconsole.com/installer -L -o drupal.phar && \
+  php drupal.phar && \
+  mv drupal.phar /usr/local/bin/drupal && \
+  chmod +x /usr/local/bin/drupal
 
 # PHP_CodeSniffer
 RUN composer global require drupal/coder && \
