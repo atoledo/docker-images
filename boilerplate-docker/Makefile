@@ -16,7 +16,7 @@ test:
 	docker build -t $(IMAGE) --rm .
 	docker run --name $(CONATAINER_DEV) --rm \
           -u $(id -u):$(id -g) \
-					-v $(HOME)/projects/jj_hpi:/jj_hpi \
+					-v $(HOME):/${USER} \
 					-it $(IMAGE)
 
 release:
