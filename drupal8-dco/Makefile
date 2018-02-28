@@ -1,5 +1,5 @@
 IMAGE="bosolutions/d8-cli"
-CONATAINER_DEV="d8_cli"
+CONATAINER_DEV="d8-cli"
 
 .PHONY: debug \
 	release \
@@ -15,7 +15,7 @@ clean:
 test:
 	docker build -t $(IMAGE) --rm .
 	docker run --name $(CONATAINER_DEV) --rm \
-					-v $(HOME)/projects/janrain-d8/modules/janrain:/janrain \
+					-v $(HOME):/${USER} \
 					-t $(IMAGE)
 
 release:
