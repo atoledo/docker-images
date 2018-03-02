@@ -35,9 +35,13 @@ RUN composer global require drupal/coder && \
 
 # Drush
 RUN composer global require symfony/yaml:~3
-RUN composer global require drush/drush:dev-master
+RUN composer global require drush/drush:~8
 
-# Copy Acquia Drush alias integration
+# Add MySQL client so Drush can perform db operations
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+  mysql-server
+
+#TODO: Copy Acquia Drush alias integration
 COPY config/.drush /root/.drush
 
 # Cleanup

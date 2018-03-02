@@ -1,5 +1,5 @@
 IMAGE="bosolutions/d8-cli"
-CONATAINER_DEV="d8-cli"
+CONATAINER_DEV="dev-d8-cli"
 
 .PHONY: debug \
 	release \
