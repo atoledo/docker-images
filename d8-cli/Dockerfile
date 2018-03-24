@@ -2,7 +2,7 @@ FROM php:7.1-cli
 
 MAINTAINER Andre Toledo Modesto de Souza <atoledo@ciandt.com>
 
-RUN apt-get update
+RUN apt-get update #redo
 
 RUN apt-get -y --force-yes --no-install-recommends install \
   git zip unzip curl vim wget ssh rsync
@@ -14,6 +14,10 @@ RUN apt-get -y --force-yes --no-install-recommends install \
   docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ &&  \
   docker-php-ext-install -j$(nproc) gd && \
   docker-php-ext-install mysqli pdo pdo_mysql
+
+# Create a non-root user with access to sudo and the default group set to 'users' (gid = 100)
+RUN useradd -m -s /bin/bash -g users -G sudo,www-data,ssh -p docker docker && \
+    echo 'docker ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 # Composer
 RUN curl -ksSL https://getcomposer.org/installer | php && \
@@ -41,8 +45,7 @@ RUN composer global require drush/drush:~8
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
   mysql-server
 
-#TODO: Copy Acquia Drush alias integration
-COPY config/.drush /root/.drush
+COPY docker-entrypoint.sh /bin/docker-entrypoint.sh
 
 # Cleanup
 RUN apt-get purge -y && \
@@ -50,4 +53,6 @@ RUN apt-get purge -y && \
   apt-get autoclean -y && \
   apt-get autoremove -y
 
-#CMD phpcs --standard=Drupal --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md,js janrain
+ENTRYPOINT ["/bin/docker-entrypoint.sh"]
+
+CMD [ "bash"]
