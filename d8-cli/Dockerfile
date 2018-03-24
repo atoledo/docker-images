@@ -37,9 +37,15 @@ RUN composer global require drupal/coder && \
   phpcs --config-set installed_paths /root/.composer/vendor/drupal/coder/coder_sniffer && \
   phpcs -i
 
+USER docker
+
 # Drush
 RUN composer global require symfony/yaml:~3
 RUN composer global require drush/drush:~8
+
+ENV PATH="$PATH:~/.composer/vendor/bin"
+
+USER root
 
 # Add MySQL client so Drush can perform db operations
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
