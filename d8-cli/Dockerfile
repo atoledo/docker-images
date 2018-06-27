@@ -2,18 +2,20 @@ FROM php:7.1-cli
 
 MAINTAINER Andre Toledo Modesto de Souza <atoledo@ciandt.com>
 
-RUN apt-get update #redo
+RUN apt-get update #redo2
 
 RUN apt-get -y --force-yes --no-install-recommends install \
   git zip unzip curl vim wget ssh rsync
 
 # Adding PHP extensions.
 RUN apt-get -y --force-yes --no-install-recommends install \
-  libfreetype6-dev libjpeg62-turbo-dev libmcrypt-dev libpng-dev && \
+  libfreetype6-dev libjpeg62-turbo-dev libmcrypt-dev libpng-dev \
+  libgmp-dev re2c libmhash-dev file && \
   docker-php-ext-install -j$(nproc) iconv mcrypt && \
   docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ &&  \
   docker-php-ext-install -j$(nproc) gd && \
-  docker-php-ext-install mysqli pdo pdo_mysql
+  docker-php-ext-install mysqli pdo pdo_mysql && \
+  docker-php-ext-configure gmp && docker-php-ext-install gmp
 
 # Create a non-root user with access to sudo and the default group set to 'users' (gid = 100)
 RUN useradd -m -s /bin/bash -g users -G sudo,www-data,ssh -p docker docker && \

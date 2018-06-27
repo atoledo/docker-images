@@ -1,33 +1,25 @@
 # CLI Docker image for Drupal 8
 
-Based on Debian 7.0 "Wheezy" (debian:wheezy)
+Custom image for Drupal 8 / PHP development
 
-## Includes
+Contains:
+- PHP 7.1
+- Drush ~8
+- Drupal Console
+- PHP_CodeSniffer
+- Composer
 
-- php
-  - php-fpm && php-cli 5.6.x
-  - composer 1.0-dev
-  - drush 6,7,8
-    - registry_rebuild
-    - coder-8.x + phpcs
-  - drupal console 0.9.7
-- ruby
-  - ruby 1.9.3
-  - gem 1.8.23
-  - bundler 1.10.6
-- nodejs
-  - nvm 0.29.0
-  - nodejs 4.2.2 (via nvm)
-    - npm 3.4.0
-    - bower 1.6.5
-- python 2.7.3
+Usage: The docker-entrypoint.sh script expects 2 environment parameters: CLI_USER_ID and CLI_USER_GROUP
 
-Other notable tools:
+To get these values run:
 
-- git
-- curl/wget
-- zip/unzip
-- mysql-client
-- imagemagick
-- ping
-- mc
+$ id -u
+
+$ id -g
+
+General usage:
+docker run --name d8-cli --rm \
+  -v /path/to/workspace:/workspace \
+  -e CLI_USER_ID=123456789 \
+  -e CLI_USER_GROUP=123456789 \
+  -t bosolutions/d8-cli
